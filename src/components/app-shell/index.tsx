@@ -1,15 +1,15 @@
-import type React from 'react';
+import { type ReactNode } from 'react';
 import Header from './header';
 import Footer from './footer';
 
 interface AppShellProps {
-	children: React.ReactNode;
+	children: ReactNode;
 }
 const AppShell = ({ children }: Readonly<AppShellProps>) => {
 	return (
 		<>
 			<Header />
-			{children}
+			<main className="m-h-screen container mx-auto my-12">{children}</main>
 			<Footer />
 		</>
 	);
