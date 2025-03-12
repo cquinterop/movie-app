@@ -1,25 +1,27 @@
 import { type GenreData } from '@/types/genre';
 
 export interface MovieData {
-	id: string;
-	bestRating: string;
-	datePublished: string;
-	directors: string;
-	duration: string;
-	genres: GenreData[];
-	mainActors: string;
-	posterUrl: string;
-	rating: string;
-	ratingValue: string;
-	summary: string;
-	title: string;
-	worstRating: string;
-	writers: string;
+	movie: {
+		id: string;
+		bestRating: number;
+		datePublished: string;
+		directors: string[];
+		duration: string;
+		genres: GenreData[];
+		mainActors: string[];
+		posterUrl: string;
+		rating: string;
+		ratingValue: number;
+		summary: string;
+		title: string;
+		worstRating: number;
+		writers: string[];
+	};
 }
 
 export interface MoviesData {
 	movies: {
-		nodes: MovieData[];
+		nodes: MovieData['movie'][];
 		pagination: PaginationInput;
 	};
 }
@@ -41,5 +43,5 @@ export interface MoviesVariables {
 }
 
 export interface MovieVariables {
-	id: string;
+	movieId: string;
 }

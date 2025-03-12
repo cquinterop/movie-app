@@ -1,11 +1,8 @@
 import { type BaseSyntheticEvent } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { POSTER_FALLBACK } from '@/constants/movies';
 import Image from 'next/image';
-
-const POSTER_FALLBACK = '/images/no_poster.png';
-const handleImageError = (event: { target: HTMLImageElement }) => {
-	event.target.srcset = POSTER_FALLBACK;
-};
+import { handleImageError } from '@/utils/movies';
 
 interface MovieCardProps {
 	title: string;
@@ -23,9 +20,9 @@ const MovieCard = ({ title, posterUrl }: Readonly<MovieCardProps>) => {
 					alt="Movie poster"
 					height={500}
 					loading="lazy"
-					src={posterUrl || POSTER_FALLBACK}
+					src={posterUrl}
 					width={500}
-					onError={(event) => handleImageError(event as BaseSyntheticEvent)}
+					onError={(event) => handleImageError(event as BaseSyntheticEvent, POSTER_FALLBACK)}
 				/>
 			</CardContent>
 		</Card>

@@ -5,6 +5,7 @@ import MovieCard from '@/components/ui/movie-card';
 import EmptyState from '@/components/ui/empty-state';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import BasePagination from '@/app/(home)/(movie-section)/base-pagination';
+import Link from 'next/link';
 
 const MovieSection = () => {
 	const { search, genre, page } = useSearchFilters();
@@ -18,11 +19,15 @@ const MovieSection = () => {
 		<section className="container mx-auto py-12">
 			<div className="flex flex-wrap gap-6">
 				{movies.map((movie) => (
-					<MovieCard
+					<Link
+						href={`/movie/${movie.id}`}
 						key={movie.id}
-						posterUrl={movie.posterUrl}
-						title={movie.title}
-					/>
+					>
+						<MovieCard
+							posterUrl={movie.posterUrl}
+							title={movie.title}
+						/>
+					</Link>
 				))}
 				<BasePagination
 					page={Number(pagination.page)}
