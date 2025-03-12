@@ -20,6 +20,7 @@ export interface MovieData {
 export interface MoviesData {
 	movies: {
 		nodes: MovieData[];
+		pagination: PaginationInput;
 	};
 }
 
@@ -29,8 +30,9 @@ export interface MovieFilterInput {
 }
 
 export interface PaginationInput {
-	perPage?: number;
-	page?: number;
+	perPage?: string;
+	page?: string;
+	totalPages?: string;
 }
 
 export interface MoviesVariables {

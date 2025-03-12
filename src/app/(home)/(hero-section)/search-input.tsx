@@ -10,7 +10,9 @@ const SearchInput = () => {
 	const { search: initialSearch, setParams } = useSearchFilters();
 
 	const handleMovieSearch = debounce((event: { target: HTMLInputElement }) => {
-		setParams({ search: event.target.value });
+		const search = event.target.value;
+
+		setParams({ search });
 	}, 1500);
 
 	return (

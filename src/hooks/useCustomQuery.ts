@@ -1,15 +1,16 @@
 import { useSuspenseQuery } from '@apollo/client';
-import { MoviesData, MovieFilterInput } from '@/types/movie';
+import { MoviesData, MoviesVariables } from '@/types/movie';
 import { GenresData } from '@/types/genre';
 import { GET_MOVIES, GET_GENRES } from '@/lib/graphql/queries';
 
-export const useMovies = (input: MovieFilterInput = {}) => {
+export const useMovies = (variables: MoviesVariables) => {
 	const { data } = useSuspenseQuery<MoviesData>(GET_MOVIES, {
-		variables: { where: input },
+		variables,
 	});
 
 	return {
 		data: data?.movies?.nodes ?? [],
+		pagination: data?.movies?.pagination ?? [],
 	};
 };
 

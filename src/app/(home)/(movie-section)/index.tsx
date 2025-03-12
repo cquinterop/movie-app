@@ -4,10 +4,11 @@ import { useMovies } from '@/hooks/useCustomQuery';
 import MovieCard from '@/components/ui/movie-card';
 import EmptyState from '@/components/ui/empty-state';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
+import BasePagination from '@/app/(home)/(movie-section)/base-pagination';
 
 const MovieSection = () => {
-	const { search, genre } = useSearchFilters();
-	const { data: movies } = useMovies({ search, genre });
+	const { search, genre, page } = useSearchFilters();
+	const { data: movies, pagination } = useMovies({ where: { search, genre }, pagination: { page: Number.parseInt(page) || 1, perPage: 24 } });
 
 	if (!movies.length) {
 		return <EmptyState />;
@@ -23,6 +24,10 @@ const MovieSection = () => {
 						title={movie.title}
 					/>
 				))}
+				<BasePagination
+					page={Number(pagination.page)}
+					totalPages={Number(pagination.totalPages)}
+				/>
 			</div>
 		</section>
 	);
