@@ -1,14 +1,11 @@
 'use client';
 
 import { type ReactNode, useMemo } from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink, makeVar } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-
 interface DataProviderProps {
 	children: ReactNode;
 }
-
-export const searchVar = makeVar<string>('');
 
 const createApolloClient = () => {
 	const httpLink = createHttpLink({
@@ -28,19 +25,7 @@ const createApolloClient = () => {
 
 	return new ApolloClient({
 		link: authLink.concat(httpLink),
-		cache: new InMemoryCache({
-			typePolicies: {
-				Query: {
-					fields: {
-						searchValue: {
-							read() {
-								return searchVar();
-							},
-						},
-					},
-				},
-			},
-		}),
+		cache: new InMemoryCache(),
 		defaultOptions: {
 			watchQuery: {
 				fetchPolicy: 'network-only',
@@ -50,7 +35,7 @@ const createApolloClient = () => {
 	});
 };
 
-const DataProvider = ({ children }: DataProviderProps) => {
+const DataProvider = ({ children }: Readonly<DataProviderProps>) => {
 	const client = useMemo(() => createApolloClient(), []);
 
 	return <ApolloProvider client={client}>{children}</ApolloProvider>;

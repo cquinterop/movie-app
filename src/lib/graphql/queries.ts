@@ -1,121 +1,58 @@
 import { gql, TypedDocumentNode } from '@apollo/client';
 import { MoviesData, MovieData, MoviesVariables, MovieVariables } from '@/types/movie';
 import { GenreData, GenresData } from '@/types/genre';
+import { MOVIE_FRAGMENT, PAGINATION_FRAGMENT } from '@/lib/graphql/fragments';
 
 export const GET_MOVIES: TypedDocumentNode<MoviesData, MoviesVariables> = gql`
 	query GetMovies($pagination: PaginationInput, $where: MovieFilterInput) {
 		movies(pagination: $pagination, where: $where) {
 			nodes {
-				bestRating
-				datePublished
-				directors
-				duration
-				genres {
-					id
-					title
-				}
-				mainActors
-				posterUrl
-				rating
-				ratingValue
-				summary
-				title
-				worstRating
-				writers
-				id
+				...MovieFragment
 			}
 			pagination {
-				perPage
-				totalPages
-				page
+				...PaginationFragment
 			}
 		}
 	}
+
+	${MOVIE_FRAGMENT}
+	${PAGINATION_FRAGMENT}
 `;
 
 export const GET_MOVIE: TypedDocumentNode<MovieData, MovieVariables> = gql`
 	query GetMovie($movieId: ID!) {
 		movie(id: $movieId) {
-			bestRating
-			datePublished
-			directors
-			duration
-			genres {
-				id
-				title
-			}
-			id
-			mainActors
-			posterUrl
-			rating
-			ratingValue
-			summary
-			title
-			worstRating
-			writers
+			...MovieFragment
 		}
 	}
+
+	${MOVIE_FRAGMENT}
 `;
 
 export const GET_GENRES: TypedDocumentNode<GenresData, MovieVariables> = gql`
-	query GetGenres {
+	query GetGenres($includeMovies: Boolean = false) {
 		genres {
 			nodes {
 				id
-				movies {
-					bestRating
-					datePublished
-					directors
-					duration
-					genres {
-						id
-						title
-					}
-					id
-					mainActors
-					posterUrl
-					rating
-					ratingValue
-					summary
-					title
-					worstRating
-					writers
-				}
 				title
-			}
-			pagination {
-				page
-				perPage
-				totalPages
+				movies @include(if: $includeMovies) {
+					...MovieFragment
+				}
 			}
 		}
 	}
+
+	${MOVIE_FRAGMENT}
 `;
 
 export const GET_GENRE: TypedDocumentNode<GenreData, MovieVariables> = gql`
-	query GetGenre($genreId: ID!) {
+	query GetGenre($genreId: ID!, $includeMovies: Boolean = false) {
 		genre(id: $genreId) {
 			id
-			movies {
-				bestRating
-				datePublished
-				directors
-				duration
-				genres {
-					id
-					title
-				}
-				id
-				mainActors
-				posterUrl
-				rating
-				ratingValue
-				summary
-				title
-				worstRating
-				writers
-			}
 			title
+			movies @include(if: $includeMovies) {
+				...MovieFragment
+			}
 		}
 	}
 `;

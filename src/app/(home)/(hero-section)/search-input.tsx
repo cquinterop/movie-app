@@ -3,22 +3,14 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Search } from 'lucide-react';
-import { searchVar } from '@/providers/data-provider';
-import { useSearchParams, useRouter } from 'next/navigation';
 import debounce from 'debounce';
+import { useSearchFilters } from '@/hooks/useSearchFilter';
 
 const SearchInput = () => {
-	const router = useRouter();
-	const searchParams = useSearchParams();
-
-	const initialSearch = searchParams.get('search') ?? '';
-	searchVar(initialSearch);
+	const { search: initialSearch, setParams } = useSearchFilters();
 
 	const handleMovieSearch = debounce((event: { target: HTMLInputElement }) => {
-		const searchValue = event.target.value;
-
-		searchVar(searchValue);
-		router.replace(`?search=${encodeURIComponent(searchValue)}`);
+		setParams({ search: event.target.value });
 	}, 1500);
 
 	return (

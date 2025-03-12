@@ -1,19 +1,13 @@
 'use client';
 
-import { useMovies } from '@/hooks/useQuery';
-import { useReactiveVar } from '@apollo/client';
+import { useMovies } from '@/hooks/useCustomQuery';
 import MovieCard from '@/components/ui/movie-card';
-import { GET_MOVIES } from '@/lib/graphql/queries';
-import { searchVar } from '@/providers/data-provider';
 import EmptyState from '@/components/ui/empty-state';
+import { useSearchFilters } from '@/hooks/useSearchFilter';
 
 const MovieSection = () => {
-	const searchValue = useReactiveVar(searchVar);
-	const {
-		data: {
-			movies: { nodes: movies },
-		},
-	} = useMovies(GET_MOVIES, { search: searchValue });
+	const { search, genre } = useSearchFilters();
+	const { data: movies } = useMovies({ search, genre });
 
 	if (!movies.length) {
 		return <EmptyState />;
