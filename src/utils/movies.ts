@@ -16,7 +16,7 @@ export const formatISOString = (time: string): string => {
 
 export const movieFactory = (movie: MovieData['movie']) => ({
 	id: movie?.id ?? crypto.randomUUID(),
-	bestRating: movie?.bestRating ?? 0,
+	bestRating: movie?.bestRating ?? '',
 	datePublished: movie?.datePublished ? formatDateToLocale(movie.datePublished) : '',
 	directors: movie?.directors ?? [],
 	duration: movie?.duration ? formatISOString(movie?.duration) : '',
@@ -24,7 +24,7 @@ export const movieFactory = (movie: MovieData['movie']) => ({
 	mainActors: movie?.mainActors ?? [],
 	posterUrl: movie?.posterUrl ?? POSTER_FALLBACK,
 	rating: movie?.rating ?? '',
-	ratingValue: movie?.ratingValue ?? 0,
+	ratingValue: movie?.ratingValue ?? '',
 	summary: movie?.summary ?? '',
 	title: movie?.title ?? '',
 	worstRating: movie?.worstRating ?? '',

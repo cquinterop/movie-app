@@ -3,6 +3,7 @@
 import { type ReactNode, useMemo } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+
 interface DataProviderProps {
 	children: ReactNode;
 }

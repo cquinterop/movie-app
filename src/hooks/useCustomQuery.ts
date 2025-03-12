@@ -3,15 +3,43 @@ import { MoviesData, MoviesVariables, MovieData, MovieVariables } from '@/types/
 import { GenresData } from '@/types/genre';
 import { GET_MOVIES, GET_MOVIE, GET_GENRES } from '@/lib/graphql/queries';
 import { movieFactory } from '@/utils/movies';
+import { useEffect } from 'react';
 
 export const useMovies = (variables: MoviesVariables) => {
-	const { data } = useSuspenseQuery<MoviesData>(GET_MOVIES, {
+	const { data, fetchMore } = useSuspenseQuery<MoviesData>(GET_MOVIES, {
 		variables,
 	});
+
+	useEffect(() => {
+		if (!data?.movies?.totalMovies) {
+			fetchMore({
+				variables: {
+					...variables,
+					pagination: {
+						page: data.movies.pagination.totalPages,
+						perPage: data.movies.pagination.perPage,
+					},
+				},
+				updateQuery(previousData: MoviesData, { fetchMoreResult }: { fetchMoreResult?: MoviesData }) {
+					if (!fetchMoreResult) {
+						return previousData;
+					}
+
+					return {
+						movies: {
+							...previousData.movies,
+							totalMovies: Number(previousData.movies.pagination.perPage) * (Number(previousData.movies.pagination.totalPages) - 1) + fetchMoreResult.movies.nodes.length,
+						},
+					};
+				},
+			});
+		}
+	}, [data, fetchMore, variables]);
 
 	return {
 		data: data?.movies?.nodes ? data.movies.nodes.map(movieFactory) : [],
 		pagination: data?.movies?.pagination ?? [],
+		totalMovies: data?.movies?.totalMovies ?? 0,
 	};
 };
 

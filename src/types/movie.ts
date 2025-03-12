@@ -3,7 +3,7 @@ import { type GenreData } from '@/types/genre';
 export interface MovieData {
 	movie: {
 		id: string;
-		bestRating: number;
+		bestRating: string;
 		datePublished: string;
 		directors: string[];
 		duration: string;
@@ -11,10 +11,10 @@ export interface MovieData {
 		mainActors: string[];
 		posterUrl: string;
 		rating: string;
-		ratingValue: number;
+		ratingValue: string;
 		summary: string;
 		title: string;
-		worstRating: number;
+		worstRating: string;
 		writers: string[];
 	};
 }
@@ -23,6 +23,7 @@ export interface MoviesData {
 	movies: {
 		nodes: MovieData['movie'][];
 		pagination: PaginationInput;
+		totalMovies?: number;
 	};
 }
 
