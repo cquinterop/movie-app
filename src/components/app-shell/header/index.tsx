@@ -4,26 +4,26 @@ import ModeToggle from '@/components/app-shell/header/mode-toggle';
 
 const Header = () => {
 	return (
-		<header>
-			<div className="container flex h-14 items-center">
-				<Link
-					className="mr-4 flex items-center gap-2 font-semibold"
-					href="/"
-				>
-					<Film className="h-5 w-5" />
-					<span>Movies</span>
-				</Link>
-
-				<nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
+		<header className="bg-background border-b shadow-sm">
+			<div className="flex h-16 items-center justify-between px-24">
+				<nav className="hidden items-center space-x-6 md:flex">
 					<Link
-						className="hover:text-primary'text-foreground text-sm font-medium transition-colors"
+						className="flex items-center gap-2 text-lg font-semibold"
+						href="/"
+					>
+						<Film className="text-primary h-6 w-6" />
+						<span>Movies</span>
+					</Link>
+					<Link
+						className="hover:text-primary text-sm font-medium transition-colors"
 						href="/"
 					>
 						Home
 					</Link>
 				</nav>
-
-				<ModeToggle />
+				<div className="flex items-center space-x-4">
+					<ModeToggle />
+				</div>
 			</div>
 		</header>
 	);

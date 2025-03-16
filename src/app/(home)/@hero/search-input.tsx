@@ -12,7 +12,7 @@ const SearchInput = () => {
 	const handleMovieSearch = debounce((event: { target: HTMLInputElement }) => {
 		const search = event.target.value;
 
-		setParams({ search });
+		setParams({ search, page: 1 });
 	}, 1500);
 
 	return (
@@ -26,6 +26,7 @@ const SearchInput = () => {
 			<div className="relative flex w-3/4 items-center">
 				<Search className="text-muted-foreground absolute left-3 h-5 w-5" />
 				<Input
+					autoFocus
 					className="h-12 rounded-full border-2 pr-10 pl-10 text-base focus-visible:ring-offset-0"
 					defaultValue={initialSearch}
 					id="movie"

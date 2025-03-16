@@ -33,9 +33,9 @@ export interface MovieFilterInput {
 }
 
 export interface PaginationInput {
-	perPage?: string;
-	page?: string;
-	totalPages?: string;
+	perPage?: number;
+	page?: number;
+	totalPages?: number;
 }
 
 export interface MoviesVariables {

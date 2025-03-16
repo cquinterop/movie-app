@@ -1,32 +1,21 @@
 'use client';
 
 import { type ReactNode, useMemo } from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 interface DataProviderProps {
 	children: ReactNode;
 }
 
+export const cache = new InMemoryCache();
+
 const createApolloClient = () => {
-	const httpLink = createHttpLink({
-		uri: `${process.env.NEXT_PUBLIC_MOVIES_API_BASE_URL}/graphql`,
-	});
-
-	const authLink = setContext((_, { headers }) => {
-		const token = process.env.NEXT_PUBLIC_MOVIES_API_TOKEN;
-
-		return {
-			headers: {
-				...headers,
-				authorization: token ? `Bearer ${token}` : '',
-			},
-		};
-	});
-
 	return new ApolloClient({
-		link: authLink.concat(httpLink),
-		cache: new InMemoryCache(),
+		uri: `${process.env.NEXT_PUBLIC_MOVIES_API_BASE_URL}/graphql`,
+		cache,
+		headers: {
+			authorization: `Bearer ${process.env.NEXT_PUBLIC_MOVIES_API_TOKEN}`,
+		},
 		defaultOptions: {
 			watchQuery: {
 				fetchPolicy: 'network-only',

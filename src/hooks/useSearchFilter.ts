@@ -1,11 +1,16 @@
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { MovieFilterInput, PaginationInput } from '@/types/movie';
+import { useCallback } from 'react';
 
-type SearchParams = MovieFilterInput & PaginationInput;
-interface SearchOptions {
-	delay?: number;
-	navigation?: 'push' | 'replace';
+interface CustomParams {
+	modal?: string;
 }
+
+interface SearchOptions {
+	append?: boolean;
+}
+
+type SearchParams = CustomParams & MovieFilterInput & PaginationInput;
 
 export const useSearchFilters = () => {
 	const searchParams = useSearchParams();
@@ -15,27 +20,33 @@ export const useSearchFilters = () => {
 	const search = searchParams.get('search') ?? '';
 	const genre = searchParams.get('genre') ?? '';
 	const page = searchParams.get('page') ?? '';
+	const modal = searchParams.get('modal') ?? '';
 
-	const setParams = (input: SearchParams, options: SearchOptions = {}) => {
-		const params = new URLSearchParams(searchParams);
+	const setParams = useCallback(
+		(input: SearchParams, options: SearchOptions = {}) => {
+			const { append = true } = options;
+			const params = new URLSearchParams(append ? searchParams : '');
 
-		Object.entries(input).forEach(([key, value]) => {
-			if (!value) {
-				params.delete(key);
+			Object.entries(input).forEach(([key, value]) => {
+				if (!value) {
+					params.delete(key);
 
-				return;
-			}
+					return;
+				}
 
-			params.set(key, value);
-		});
+				params.set(key, value);
+			});
 
-		router[options?.navigation ?? 'replace'](`${pathname}?${params.toString()}`);
-	};
+			router.replace(`${pathname}?${params.toString()}`);
+		},
+		[pathname, router, searchParams]
+	);
 
 	return {
 		search,
 		genre,
 		page,
+		modal,
 		setParams,
 	};
 };

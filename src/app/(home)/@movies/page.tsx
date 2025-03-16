@@ -1,11 +1,11 @@
 'use client';
 
-import { useMovies } from '@/hooks/useCustomQuery';
-import MovieCard from '@/components/ui/movie-card';
-import EmptyState from '@/components/ui/empty-state';
-import { useSearchFilters } from '@/hooks/useSearchFilter';
-import BasePagination from '@/app/(home)/(movie-section)/base-pagination';
 import Link from 'next/link';
+import MovieCard from '@/app/(home)/@movies/movie-card';
+import BasePagination from '@/app/(home)/@movies/base-pagination';
+import EmptyState from '@/components/ui/empty-state';
+import { useMovies } from '@/hooks/useCustomQuery';
+import { useSearchFilters } from '@/hooks/useSearchFilter';
 
 const MovieSection = () => {
 	const { search, genre, page } = useSearchFilters();
@@ -16,7 +16,7 @@ const MovieSection = () => {
 	}
 
 	return (
-		<section className="container mx-auto py-12">
+		<section className="container mx-auto -mt-24 pb-12">
 			<p>Search Results: {totalMovies}</p>
 			<div className="flex flex-wrap gap-6">
 				{movies.map((movie) => (
@@ -25,7 +25,9 @@ const MovieSection = () => {
 						key={movie.id}
 					>
 						<MovieCard
+							datePublished={movie.datePublished}
 							posterUrl={movie.posterUrl}
+							ratingValue={movie.ratingValue}
 							title={movie.title}
 						/>
 					</Link>

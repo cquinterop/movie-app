@@ -9,7 +9,7 @@ const AppShell = ({ children }: Readonly<AppShellProps>) => {
 	return (
 		<>
 			<Header />
-			<main className="m-h-screen container mx-auto my-12">{children}</main>
+			<main className="mx-auto min-h-screen">{children}</main>
 			<Footer />
 		</>
 	);

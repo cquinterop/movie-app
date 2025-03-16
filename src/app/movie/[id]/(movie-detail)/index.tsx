@@ -1,23 +1,24 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { useMovie } from '@/hooks/useCustomQuery';
-import { useParams } from 'next/navigation';
-import { Star, Hourglass, Calendar } from 'lucide-react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { type BaseSyntheticEvent } from 'react';
 import { POSTER_FALLBACK } from '@/constants/movies';
 import { handleImageError } from '@/utils/movies';
 import { MovieVariables } from '@/types/movie';
 import EmptyState from '@/components/ui/empty-state';
-import CastSection from './cast-section';
+import CastSection from '@/app/movie/[id]/(movie-detail)/cast-section';
+import MetaSection from '@/app/movie/[id]/(movie-detail)/meta-section';
+import GenresSection from '@/app/movie/[id]/(movie-detail)/genres-section';
 
-const MovieDetail = () => {
-	const { id } = useParams();
-	const { data: movie } = useMovie({ movieId: id as MovieVariables['movieId'] });
+type MovieDetailProps = {
+	id: MovieVariables['movieId'];
+};
 
-	if (!movie) {
+const MovieDetail = ({ id }: Readonly<MovieDetailProps>) => {
+	const { data: movie } = useMovie({ movieId: id });
+
+	if (!movie?.id) {
 		return <EmptyState />;
 	}
 
@@ -34,28 +35,13 @@ const MovieDetail = () => {
 				/>
 				<div className="space-y-4 lg:col-span-2">
 					<h1 className="text-3xl font-bold">{movie.title}</h1>
-					<div className="flex gap-4">
-						<p className="flex gap-2">
-							<Calendar />
-							{movie.datePublished}
-						</p>
-						<p className="flex gap-2">
-							<Star /> {movie.ratingValue}/{movie.bestRating}
-						</p>
-						<p className="flex gap-2">
-							<Hourglass /> {movie.duration}
-						</p>
-					</div>
-					<div className="flex flex-wrap gap-2">
-						{movie?.genres?.map((genre) => (
-							<Link
-								href={`/?genre=${genre.title}`}
-								key={genre.id}
-							>
-								<Badge>{genre.title}</Badge>
-							</Link>
-						))}
-					</div>
+					<MetaSection
+						bestRating={movie.bestRating}
+						datePublished={movie.datePublished}
+						duration={movie.duration}
+						ratingValue={movie.ratingValue}
+					/>
+					<GenresSection genres={movie.genres} />
 					<p className="text-lg">{movie.summary}</p>
 					<CastSection
 						directors={movie.directors}

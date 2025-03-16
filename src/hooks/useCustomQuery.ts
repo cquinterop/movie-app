@@ -5,8 +5,8 @@ import { GET_MOVIES, GET_MOVIE, GET_GENRES } from '@/lib/graphql/queries';
 import { movieFactory } from '@/utils/movies';
 import { useEffect } from 'react';
 
-export const useMovies = (variables: MoviesVariables) => {
-	const { data, fetchMore } = useSuspenseQuery<MoviesData>(GET_MOVIES, {
+export const useMovies = (variables: MoviesVariables = {}) => {
+	const { data, fetchMore, client } = useSuspenseQuery<MoviesData>(GET_MOVIES, {
 		variables,
 	});
 
@@ -40,6 +40,7 @@ export const useMovies = (variables: MoviesVariables) => {
 		data: data?.movies?.nodes ? data.movies.nodes.map(movieFactory) : [],
 		pagination: data?.movies?.pagination ?? [],
 		totalMovies: data?.movies?.totalMovies ?? 0,
+		client,
 	};
 };
 
