@@ -38,8 +38,8 @@ const MovieModal = () => {
 					<DialogDescription>A fresh random movie to watch, every time.</DialogDescription>
 				</DialogHeader>
 				<Link
+					className="w-full max-w-full"
 					href={`/movie/${movie.id}`}
-					key={movie.id}
 				>
 					<MovieCard
 						datePublished={movie.datePublished}

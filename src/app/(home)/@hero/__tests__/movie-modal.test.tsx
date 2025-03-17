@@ -28,7 +28,7 @@ jest.mock('next/image', () => ({
 const mockMovie = {
 	id: '1',
 	title: 'Test Movie',
-	posterUrl: 'https://example.com/poster.jpg',
+	posterUrl: 'https://www.example.com/poster.jpg',
 	datePublished: '2023-01-01',
 	ratingValue: '8.5',
 };

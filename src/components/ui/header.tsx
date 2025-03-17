@@ -4,13 +4,10 @@ import Image from 'next/image';
 
 const Header = () => {
 	return (
-		<header className="bg-background">
-			<div className="flex h-16 items-center justify-between px-24">
-				<nav className="hidden items-center space-x-6 md:flex">
-					<Link
-						className="flex items-center gap-2 text-lg font-semibold"
-						href="/"
-					>
+		<header className="bg-background sticky top-0 z-20">
+			<div className="container mx-auto flex h-14 items-center justify-between px-6">
+				<nav className="flex items-center">
+					<Link href="/">
 						<Image
 							priority
 							alt="Movie Browser Logo"
@@ -29,15 +26,13 @@ const Header = () => {
 						/>
 					</Link>
 					<Link
-						className="hover:text-primary text-sm font-medium transition-colors"
+						className="ml-4 hidden font-medium md:flex"
 						href="/"
 					>
 						Home
 					</Link>
 				</nav>
-				<div className="flex items-center space-x-4">
-					<ModeToggle />
-				</div>
+				<ModeToggle />
 			</div>
 		</header>
 	);
