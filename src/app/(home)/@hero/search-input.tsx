@@ -28,6 +28,7 @@ const SearchInput = () => {
 				<Input
 					autoFocus
 					className="h-12 rounded-full border-2 pr-10 pl-10 text-base focus-visible:ring-offset-0"
+					data-testid="movie-search"
 					defaultValue={initialSearch}
 					id="movie"
 					name="search"
