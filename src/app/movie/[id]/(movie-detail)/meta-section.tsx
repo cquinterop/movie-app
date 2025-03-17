@@ -11,7 +11,10 @@ const MetaSection = ({ datePublished, ratingValue, duration, bestRating }: Reado
 	];
 
 	return (
-		<div className="flex gap-4">
+		<div
+			className="flex gap-4"
+			data-testid="meta-section"
+		>
 			{meta.map(
 				({ data, icon }) =>
 					!!data && (

@@ -10,7 +10,10 @@ const GenresSection = ({ genres }: Readonly<GenresSectionProps>) => {
 	}
 
 	return (
-		<div className="flex flex-wrap gap-2">
+		<div
+			className="flex flex-wrap gap-2"
+			data-testid="genres-section"
+		>
 			{genres?.map((genre) => (
 				<Link
 					href={`/?genre=${genre.title}`}

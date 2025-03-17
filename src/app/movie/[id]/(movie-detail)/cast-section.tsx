@@ -11,7 +11,10 @@ const CastSection = ({ directors, writers, mainActors }: Readonly<CastSectionPro
 	];
 
 	return (
-		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+		<div
+			className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+			data-testid="cast-section"
+		>
 			{cast.map(
 				({ names, type }) =>
 					!!names.length && (
@@ -23,8 +26,14 @@ const CastSection = ({ directors, writers, mainActors }: Readonly<CastSectionPro
 										className="flex items-center gap-3"
 										key={name}
 									>
-										<Avatar key={name}>
-											<AvatarImage src={`https://avatar.iran.liara.run/username?username=${name}`} />
+										<Avatar
+											data-testid="avatar"
+											key={name}
+										>
+											<AvatarImage
+												data-testid="avatar-image"
+												src={`https://avatar.iran.liara.run/username?username=${name}`}
+											/>
 										</Avatar>
 										<span>{name}</span>
 									</div>

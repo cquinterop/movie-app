@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Film } from 'lucide-react';
-import ModeToggle from '@/components/app-shell/header/mode-toggle';
+import ModeToggle from '@/components/ui/mode-toggle';
 
 const Header = () => {
 	return (

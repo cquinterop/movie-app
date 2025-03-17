@@ -1,15 +1,12 @@
 'use client';
 
 import { useMovie } from '@/hooks/useCustomQuery';
-import Image from 'next/image';
-import { type BaseSyntheticEvent } from 'react';
-import { POSTER_FALLBACK } from '@/constants/movies';
-import { handleImageError } from '@/utils/movies';
 import { MovieVariables } from '@/types/movie';
 import EmptyState from '@/components/ui/empty-state';
 import CastSection from '@/app/movie/[id]/(movie-detail)/cast-section';
 import MetaSection from '@/app/movie/[id]/(movie-detail)/meta-section';
 import GenresSection from '@/app/movie/[id]/(movie-detail)/genres-section';
+import PosterImage from '@/components/ui/poster-image';
 
 type MovieDetailProps = {
 	id: MovieVariables['movieId'];
@@ -25,13 +22,13 @@ const MovieDetail = ({ id }: Readonly<MovieDetailProps>) => {
 	return (
 		<div className="container mx-auto px-4 py-8 lg:px-16">
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-				<Image
-					alt={movie.title}
+				<PosterImage
+					alt="Movie poster"
 					className="w-full rounded-lg shadow-lg"
-					height={500}
+					data-testid="movie-poster"
+					height={525}
 					src={movie.posterUrl}
-					width={500}
-					onError={(event) => handleImageError(event as BaseSyntheticEvent, POSTER_FALLBACK)}
+					width={325}
 				/>
 				<div className="space-y-4 lg:col-span-2">
 					<h1 className="text-3xl font-bold">{movie.title}</h1>
