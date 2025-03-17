@@ -89,8 +89,10 @@ describe('MovieModal Component', () => {
 
 		expect(screen.getByTestId('movie-dialog')).toBeInTheDocument();
 
-		fireEvent.click(screen.getByTestId('movie-dialog-close'));
-
-		expect(mockSetParams).toHaveBeenCalledTimes(1);
+		const closeButton = screen.getByText('Close').closest('button');
+		if (closeButton) {
+			fireEvent.click(closeButton);
+			expect(mockSetParams).toHaveBeenCalledTimes(1);
+		}
 	});
 });

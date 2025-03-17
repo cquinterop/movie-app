@@ -1,5 +1,6 @@
 import { MovieData } from '@/types/movie';
 import { Calendar, Hourglass, Star } from 'lucide-react';
+import { memo } from 'react';
 
 type MetaSectionPros = Pick<MovieData['movie'], 'bestRating' | 'datePublished' | 'duration' | 'ratingValue'>;
 
@@ -31,4 +32,4 @@ const MetaSection = ({ datePublished, ratingValue, duration, bestRating }: Reado
 	);
 };
 
-export default MetaSection;
+export default memo(MetaSection);

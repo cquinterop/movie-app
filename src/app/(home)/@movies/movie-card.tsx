@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import PosterImage from '@/components/ui/poster-image';
+import { memo } from 'react';
 
 interface MovieCardProps {
 	title: string;
@@ -16,7 +17,7 @@ const MovieCard = ({ title, posterUrl, datePublished, ratingValue }: Readonly<Mo
 		>
 			<CardContent>
 				<PosterImage
-					alt="Movie poster"
+					alt={`Movie poster for ${title}`}
 					className="absolute inset-0 h-full w-full object-cover brightness-70 hover:brightness-80"
 					data-testid="movie-image"
 					height={525}
@@ -34,11 +35,16 @@ const MovieCard = ({ title, posterUrl, datePublished, ratingValue }: Readonly<Mo
 				</CardTitle>
 			</CardHeader>
 			<CardFooter className="z-10 flex justify-between text-white">
-				<p data-testid="movie-date">{datePublished}</p>
-				<p data-testid="movie-rating">{ratingValue}/10</p>
+				<p data-testid="movie-date">
+					<span className="sr-only">Release date:</span> {datePublished}
+				</p>
+				<p data-testid="movie-rating">
+					<span className="sr-only">Rating:</span> {ratingValue}/10
+				</p>
 			</CardFooter>
 		</Card>
 	);
 };
 
-export default MovieCard;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(MovieCard);

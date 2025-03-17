@@ -5,31 +5,40 @@ import { Button } from '@/components/ui/button';
 import { useGenres } from '@/hooks/useCustomQuery';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import { GenreData } from '@/types/genre';
+import { useCallback, memo } from 'react';
 
 const GenreFilter = () => {
 	const { data: genres } = useGenres();
 	const { setParams, genre: currentGenre } = useSearchFilters();
 
+	const handleOpenDialog = useCallback(() => {
+		setParams({ modal: 'random' });
+	}, [setParams]);
+
+	const handleFilterGenre = useCallback(
+		(genre: GenreData['title']) => {
+			setParams({ genre }, { append: false });
+		},
+		[setParams]
+	);
+
+	const handleClearFilter = useCallback(() => {
+		setParams({ genre: '' });
+	}, [setParams]);
+
 	if (!genres.length) {
 		return null;
 	}
 
-	const handleOpenDialog = () => {
-		setParams({ modal: 'random' });
-	};
-
-	const handleFilterGenre = (genre: GenreData['title']) => {
-		setParams({ genre }, { append: false });
-	};
-
-	const handleClearFilter = () => {
-		setParams({ genre: '' });
-	};
-
 	return (
-		<div className="mx-auto mt-6 flex max-w-[700] flex-wrap justify-center gap-3">
+		<div
+			aria-label="Filter movies by genre"
+			className="mx-auto mt-6 flex max-w-[700] flex-wrap justify-center gap-3"
+		>
 			{genres.map((genre) => (
 				<Badge
+					aria-label={`Filter by ${genre.title}`}
+					aria-pressed={genre.title === currentGenre}
 					className="h-[35] cursor-pointer transition-transform hover:scale-105"
 					data-testid={`genre-badge-${genre.title}`}
 					key={genre.id}
@@ -42,15 +51,17 @@ const GenreFilter = () => {
 				</Badge>
 			))}
 			<Button
+				aria-label="Clear all genre filters"
 				className="cursor-pointer transition-transform hover:scale-105"
 				data-testid="clear-genre-filter"
 				variant="ghost"
-				onClick={() => handleClearFilter()}
+				onClick={handleClearFilter}
 			>
 				Clear Filters
 			</Button>
 
 			<Button
+				aria-label="Get a random movie recommendation"
 				className="mt-12 cursor-pointer"
 				data-testid="random-movie-button"
 				onClick={handleOpenDialog}
@@ -61,4 +72,4 @@ const GenreFilter = () => {
 	);
 };
 
-export default GenreFilter;
+export default memo(GenreFilter);

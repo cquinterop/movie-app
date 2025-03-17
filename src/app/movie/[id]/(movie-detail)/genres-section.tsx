@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { MovieData } from '@/types/movie';
 import Link from 'next/link';
+import { memo } from 'react';
 
 type GenresSectionProps = Pick<MovieData['movie'], 'genres'>;
 
@@ -26,4 +27,4 @@ const GenresSection = ({ genres }: Readonly<GenresSectionProps>) => {
 	);
 };
 
-export default GenresSection;
+export default memo(GenresSection);

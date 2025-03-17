@@ -5,15 +5,19 @@ import { Label } from '@/components/ui/label';
 import { Search } from 'lucide-react';
 import debounce from 'debounce';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
+import { useMemo } from 'react';
 
 const SearchInput = () => {
 	const { search: initialSearch, setParams } = useSearchFilters();
 
-	const handleMovieSearch = debounce((event: { target: HTMLInputElement }) => {
-		const search = event.target.value;
-
-		setParams({ search, page: 1 });
-	}, 1500);
+	const handleMovieSearch = useMemo(
+		() =>
+			debounce((event: { target: HTMLInputElement }) => {
+				const search = event.target.value;
+				setParams({ search, page: 1 });
+			}, 1500),
+		[setParams]
+	);
 
 	return (
 		<div className="mx-auto mt-10 flex w-1/2 flex-col items-center justify-center gap-4 sm:flex-row">
@@ -24,9 +28,13 @@ const SearchInput = () => {
 				Find a movie
 			</Label>
 			<div className="relative flex w-3/4 items-center">
-				<Search className="text-muted-foreground absolute left-3 h-5 w-5" />
+				<Search
+					aria-hidden="true"
+					className="text-muted-foreground absolute left-3 h-5 w-5"
+				/>
 				<Input
 					autoFocus
+					aria-label="Search for movies"
 					className="h-12 rounded-full border-2 pr-10 pl-10 text-base focus-visible:ring-offset-0"
 					data-testid="movie-search"
 					defaultValue={initialSearch}

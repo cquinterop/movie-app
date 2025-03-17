@@ -1,5 +1,6 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { MovieData } from '@/types/movie';
+import { memo } from 'react';
 
 type CastSectionProps = Pick<MovieData['movie'], 'directors' | 'mainActors' | 'writers'>;
 
@@ -46,4 +47,4 @@ const CastSection = ({ directors, writers, mainActors }: Readonly<CastSectionPro
 	);
 };
 
-export default CastSection;
+export default memo(CastSection);

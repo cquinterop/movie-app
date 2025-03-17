@@ -144,7 +144,7 @@ describe('BasePagination Component', () => {
 		const currentPageButton = screen.getByText('1').closest('button');
 		expect(currentPageButton).not.toBeNull();
 		if (currentPageButton) {
-			expect(currentPageButton).toHaveAttribute('aria-label', 'Go to page 1');
+			expect(currentPageButton).toHaveAttribute('aria-label', 'Page 1');
 		}
 	});
 });

@@ -3,7 +3,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationEllipsis } fro
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import { getItemType } from '@/utils/pagination';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useCallback, memo } from 'react';
 
 interface PaginationProps {
 	totalPages: number;
@@ -14,8 +14,15 @@ const BasePagination = ({ totalPages, page }: Readonly<PaginationProps>) => {
 	const totalItems = useMemo(() => Array.from({ length: totalPages }, (_, index) => index + 1), [totalPages]);
 	const { setParams } = useSearchFilters();
 
+	const handlePageChange = useCallback(
+		(newPage: number) => {
+			setParams({ page: newPage });
+		},
+		[setParams]
+	);
+
 	return (
-		<Pagination>
+		<Pagination aria-label="Pagination navigation">
 			<PaginationContent>
 				<PaginationItem>
 					<Button
@@ -25,9 +32,9 @@ const BasePagination = ({ totalPages, page }: Readonly<PaginationProps>) => {
 						disabled={page === 1}
 						tabIndex={page === 1 ? -1 : 0}
 						variant="outline"
-						onClick={() => setParams({ page: page - 1 })}
+						onClick={() => handlePageChange(page - 1)}
 					>
-						<ChevronLeft />
+						<ChevronLeft aria-hidden="true" />
 						<span className="hidden sm:block">Previous</span>
 					</Button>
 				</PaginationItem>
@@ -40,16 +47,16 @@ const BasePagination = ({ totalPages, page }: Readonly<PaginationProps>) => {
 					return (
 						<PaginationItem key={itemNumber}>
 							{type === 'ellipsis' ? (
-								<PaginationEllipsis />
+								<PaginationEllipsis aria-hidden="true" />
 							) : (
 								<Button
-									aria-disabled={page === 1}
-									aria-label={`Go to page ${itemNumber}`}
+									aria-current={page === itemNumber ? 'page' : undefined}
+									aria-label={`Page ${itemNumber}`}
 									className="cursor-pointer"
 									size="icon"
-									tabIndex={-1}
+									tabIndex={page === itemNumber ? -1 : 0}
 									variant={page === itemNumber ? 'secondary' : 'outline'}
-									onClick={() => setParams({ page: itemNumber })}
+									onClick={() => handlePageChange(itemNumber)}
 								>
 									{itemNumber}
 								</Button>
@@ -65,10 +72,10 @@ const BasePagination = ({ totalPages, page }: Readonly<PaginationProps>) => {
 						disabled={page === totalPages}
 						tabIndex={page === totalPages ? -1 : 0}
 						variant="outline"
-						onClick={() => setParams({ page: page + 1 })}
+						onClick={() => handlePageChange(page + 1)}
 					>
 						<span className="hidden sm:block">Next</span>
-						<ChevronRight />
+						<ChevronRight aria-hidden="true" />
 					</Button>
 				</PaginationItem>
 			</PaginationContent>
@@ -76,4 +83,4 @@ const BasePagination = ({ totalPages, page }: Readonly<PaginationProps>) => {
 	);
 };
 
-export default BasePagination;
+export default memo(BasePagination);

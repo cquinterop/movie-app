@@ -1,11 +1,11 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
-import { useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { useEffect, useCallback, memo } from 'react';
 import { useRandomMovie } from '@/hooks/useRandomMovie';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import MovieCard from '../@movies/movie-card';
-import { X } from 'lucide-react';
+import Link from 'next/link';
 
 const MovieModal = () => {
 	const { randomMovie: movie, getRandomMovie } = useRandomMovie();
@@ -19,39 +19,46 @@ const MovieModal = () => {
 		}
 	}, [isOpen, getRandomMovie]);
 
+	const handleCloseDialog = useCallback(() => {
+		setParams({ modal: '' });
+	}, [setParams]);
+
 	if (!movie?.id) {
 		return null;
 	}
-
-	const handleCloseDialog = () => {
-		setParams({ modal: '' });
-	};
 
 	return (
 		<Dialog
 			open={isOpen}
 			onOpenChange={handleCloseDialog}
 		>
-			<DialogContent data-testid="movie-dialog">
+			<DialogContent
+				aria-labelledby="movie-dialog-title"
+				data-testid="movie-dialog"
+			>
 				<DialogHeader>
-					<DialogTitle data-testid="movie-dialog-title">
+					<DialogTitle
+						data-testid="movie-dialog-title"
+						id="movie-dialog-title"
+					>
 						You <del>Never</del> Know What {genre} Movie You&#39;ll Get!
 					</DialogTitle>
-					<DialogDescription>Here&#39;s you have your recommendation for today.</DialogDescription>
+					<DialogDescription>Here&#39;s your recommendation for today.</DialogDescription>
 				</DialogHeader>
-				<MovieCard
-					datePublished={movie.datePublished}
-					posterUrl={movie.posterUrl}
-					ratingValue={movie.ratingValue}
-					title={movie.title}
-				/>
-				<DialogClose data-testid="movie-dialog-close">
-					<X className="h-4 w-4" />
-					<span className="sr-only">Close</span>
-				</DialogClose>
+				<Link
+					href={`/movie/${movie.id}`}
+					key={movie.id}
+				>
+					<MovieCard
+						datePublished={movie.datePublished}
+						posterUrl={movie.posterUrl}
+						ratingValue={movie.ratingValue}
+						title={movie.title}
+					/>
+				</Link>
 			</DialogContent>
 		</Dialog>
 	);
 };
 
-export default MovieModal;
+export default memo(MovieModal);

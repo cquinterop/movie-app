@@ -20,16 +20,18 @@ const MovieDetail = ({ id }: Readonly<MovieDetailProps>) => {
 	}
 
 	return (
-		<div className="container mx-auto px-4 py-8 lg:px-16">
+		<article className="container mx-auto px-4 py-8 lg:px-16">
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-				<PosterImage
-					alt="Movie poster"
-					className="w-full rounded-lg shadow-lg"
-					data-testid="movie-poster"
-					height={525}
-					src={movie.posterUrl}
-					width={325}
-				/>
+				<div className="lg:col-span-1">
+					<PosterImage
+						alt={`Movie poster for ${movie.title}`}
+						className="w-full rounded-lg shadow-lg"
+						data-testid="movie-poster"
+						height={525}
+						src={movie.posterUrl}
+						width={325}
+					/>
+				</div>
 				<div className="space-y-4 lg:col-span-2">
 					<h1 className="text-3xl font-bold">{movie.title}</h1>
 					<MetaSection
@@ -39,7 +41,9 @@ const MovieDetail = ({ id }: Readonly<MovieDetailProps>) => {
 						ratingValue={movie.ratingValue}
 					/>
 					<GenresSection genres={movie.genres} />
-					<p className="text-lg">{movie.summary}</p>
+					<section aria-label="Movie summary">
+						<p className="text-lg">{movie.summary}</p>
+					</section>
 					<CastSection
 						directors={movie.directors}
 						mainActors={movie.mainActors}
@@ -47,7 +51,7 @@ const MovieDetail = ({ id }: Readonly<MovieDetailProps>) => {
 					/>
 				</div>
 			</div>
-		</div>
+		</article>
 	);
 };
 
