@@ -12,6 +12,6 @@ describe('MainHeading Component', () => {
 	it('renders the subheading with correct text', () => {
 		render(<MainHeading />);
 
-		expect(screen.getByText('And add them to your wishlist to watch later!')).toBeInTheDocument();
+		expect(screen.getByText('Or discover you next favorite one!')).toBeInTheDocument();
 	});
 });

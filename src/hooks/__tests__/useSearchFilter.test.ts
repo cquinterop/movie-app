@@ -65,7 +65,6 @@ describe('useSearchFilters Hook', () => {
 			result.current.setParams({ search: '', genre: '' });
 		});
 
-		// Just check if replace was called
 		expect(mockReplace).toHaveBeenCalled();
 	});
 

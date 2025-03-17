@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useGenres } from '@/hooks/useCustomQuery';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import { GenreData } from '@/types/genre';
+import { Sparkles } from 'lucide-react';
 import { useCallback, memo } from 'react';
 
 const GenreFilter = () => {
@@ -42,6 +43,7 @@ const GenreFilter = () => {
 					className="h-[35] cursor-pointer transition-transform hover:scale-105"
 					data-testid={`genre-badge-${genre.title}`}
 					key={genre.id}
+					role="button"
 					tabIndex={0}
 					variant={genre.title === currentGenre ? 'default' : 'secondary'}
 					onClick={() => handleFilterGenre(genre.title)}
@@ -62,11 +64,12 @@ const GenreFilter = () => {
 
 			<Button
 				aria-label="Get a random movie recommendation"
-				className="mt-12 cursor-pointer"
+				className="my-6 cursor-pointer"
 				data-testid="random-movie-button"
+				variant="ghost"
 				onClick={handleOpenDialog}
 			>
-				Life is like a box of <del>chocolates</del> movies...
+				<Sparkles /> Don&#39;t know what to watch?
 			</Button>
 		</div>
 	);

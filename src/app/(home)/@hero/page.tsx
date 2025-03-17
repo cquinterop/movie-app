@@ -6,7 +6,7 @@ import MovieModal from '@/app/(home)/@hero/movie-modal';
 const HeroSection = () => {
 	return (
 		<header
-			className="flex flex-col justify-center bg-indigo-300 pt-16 pb-48"
+			className="flex flex-col justify-center py-16"
 			data-testid="hero-section"
 		>
 			<MainHeading />

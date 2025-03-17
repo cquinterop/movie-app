@@ -1,4 +1,4 @@
-import MovieDetailsPage from '@/app/movie/[id]/(movie-detail)';
+import MovieDetails from '@/app/movie/[id]/(movie-detail)';
 
 type MovieDetailPageProps = {
 	params: Promise<{ id: string }>;
@@ -7,7 +7,7 @@ type MovieDetailPageProps = {
 const MovieDetailPage = async ({ params }: Readonly<MovieDetailPageProps>) => {
 	const { id } = await params;
 
-	return <MovieDetailsPage id={id} />;
+	return <MovieDetails id={id} />;
 };
 
 export default MovieDetailPage;

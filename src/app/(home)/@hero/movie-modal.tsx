@@ -32,18 +32,10 @@ const MovieModal = () => {
 			open={isOpen}
 			onOpenChange={handleCloseDialog}
 		>
-			<DialogContent
-				aria-labelledby="movie-dialog-title"
-				data-testid="movie-dialog"
-			>
+			<DialogContent data-testid="movie-dialog">
 				<DialogHeader>
-					<DialogTitle
-						data-testid="movie-dialog-title"
-						id="movie-dialog-title"
-					>
-						You <del>Never</del> Know What {genre} Movie You&#39;ll Get!
-					</DialogTitle>
-					<DialogDescription>Here&#39;s your recommendation for today.</DialogDescription>
+					<DialogTitle data-testid="movie-dialog-title">Here&#39;s Your {genre} Movie Recommendation!</DialogTitle>
+					<DialogDescription>A fresh random movie to watch, every time.</DialogDescription>
 				</DialogHeader>
 				<Link
 					href={`/movie/${movie.id}`}

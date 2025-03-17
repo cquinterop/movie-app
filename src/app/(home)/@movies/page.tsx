@@ -16,8 +16,8 @@ const MovieSection = () => {
 	}
 
 	return (
-		<section className="container mx-auto -mt-24 pb-12">
-			<p>Search Results: {totalMovies}</p>
+		<section className="container mx-auto pb-12">
+			{!!totalMovies && <p className="ms-2 mb-8 text-lg font-semibold text-gray-500 dark:text-gray-400">Movie Count: {totalMovies}</p>}
 			<div className="flex flex-wrap gap-6">
 				{movies.map((movie) => (
 					<Link

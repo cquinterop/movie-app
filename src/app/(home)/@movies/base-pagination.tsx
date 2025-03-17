@@ -22,7 +22,10 @@ const BasePagination = ({ totalPages, page }: Readonly<PaginationProps>) => {
 	);
 
 	return (
-		<Pagination aria-label="Pagination navigation">
+		<Pagination
+			aria-label="Pagination navigation"
+			className="my-8"
+		>
 			<PaginationContent>
 				<PaginationItem>
 					<Button
