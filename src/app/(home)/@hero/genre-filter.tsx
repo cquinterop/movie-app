@@ -6,26 +6,22 @@ import { useGenres } from '@/hooks/useCustomQuery';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import { GenreData } from '@/types/genre';
 import { Sparkles } from 'lucide-react';
-import { useCallback, memo } from 'react';
 
 const GenreFilter = () => {
 	const { data: genres } = useGenres();
 	const { setParams, genre: currentGenre } = useSearchFilters();
 
-	const handleOpenDialog = useCallback(() => {
+	const handleOpenDialog = () => {
 		setParams({ modal: 'random' });
-	}, [setParams]);
+	};
 
-	const handleFilterGenre = useCallback(
-		(genre: GenreData['title']) => {
-			setParams({ genre }, { append: false });
-		},
-		[setParams]
-	);
+	const handleFilterGenre = (genre: GenreData['title']) => {
+		setParams({ genre }, { append: false });
+	};
 
-	const handleClearFilter = useCallback(() => {
+	const handleClearFilter = () => {
 		setParams({ genre: '' });
-	}, [setParams]);
+	};
 
 	if (!genres.length) {
 		return null;
@@ -69,10 +65,10 @@ const GenreFilter = () => {
 				variant="ghost"
 				onClick={handleOpenDialog}
 			>
-				<Sparkles /> Don&#39;t know what to watch?
+				<Sparkles className="fill-yellow-500" /> Don&#39;t know what to watch?
 			</Button>
 		</div>
 	);
 };
 
-export default memo(GenreFilter);
+export default GenreFilter;

@@ -1,6 +1,5 @@
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { MovieData } from '@/types/movie';
-import { memo } from 'react';
 
 type CastSectionProps = Pick<MovieData['movie'], 'directors' | 'mainActors' | 'writers'>;
 
@@ -31,10 +30,7 @@ const CastSection = ({ directors, writers, mainActors }: Readonly<CastSectionPro
 											data-testid="avatar"
 											key={name}
 										>
-											<AvatarImage
-												data-testid="avatar-image"
-												src={`https://avatar.iran.liara.run/username?username=${name}`}
-											/>
+											<AvatarFallback>{name?.match(/\b\w/g)?.join('').slice(0, 2) ?? ''}</AvatarFallback>
 										</Avatar>
 										<span>{name}</span>
 									</div>
@@ -47,4 +43,4 @@ const CastSection = ({ directors, writers, mainActors }: Readonly<CastSectionPro
 	);
 };
 
-export default memo(CastSection);
+export default CastSection;

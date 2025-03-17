@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import Spinner from '@/app/(home)/loading';
+import MoviesSkeleton from '@/app/(home)/loading';
 
-describe('Spinner Component', () => {
-	it('includes the Clapperboard icon with animation', () => {
-		render(<Spinner />);
+describe('Skeleton Component', () => {
+	it('includes the Skeleton', () => {
+		render(<MoviesSkeleton />);
 
-		expect(screen.getByTestId('page-spinner')).toHaveClass('animate-bounce');
+		expect(screen.getByTestId('movies-skeleton')).toBeInTheDocument();
 	});
 });

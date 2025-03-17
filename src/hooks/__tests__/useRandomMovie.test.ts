@@ -105,32 +105,6 @@ describe('useRandomMovie Hook', () => {
 		expect(result.current.randomMovie).toBeUndefined();
 	});
 
-	it('allows setting randomMovie directly', () => {
-		const { result } = renderHook(() => useRandomMovie());
-		const testMovie = {
-			id: '4',
-			title: 'Test Movie',
-			bestRating: '10',
-			datePublished: '2023-04-01',
-			directors: [],
-			duration: '',
-			genres: [],
-			mainActors: [],
-			posterUrl: 'url4',
-			rating: '',
-			ratingValue: '8.0',
-			summary: 'Test summary',
-			worstRating: '0',
-			writers: [],
-		};
-
-		act(() => {
-			result.current.setRandomMovie(testMovie);
-		});
-
-		expect(result.current.randomMovie).toBe(testMovie);
-	});
-
 	it('returns a random movie when getRandomMovie is called', () => {
 		const mockMovie = { id: '1', title: 'Test Movie' };
 		(movieFactory as jest.Mock).mockReturnValue(mockMovie);

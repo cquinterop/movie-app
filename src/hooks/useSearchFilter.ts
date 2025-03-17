@@ -1,6 +1,5 @@
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { MovieFilterInput, PaginationInput } from '@/types/movie';
-import { useCallback } from 'react';
 
 interface CustomParams {
 	modal?: string;
@@ -22,25 +21,22 @@ export const useSearchFilters = () => {
 	const page = searchParams.get('page') ?? '';
 	const modal = searchParams.get('modal') ?? '';
 
-	const setParams = useCallback(
-		(input: SearchParams, options: SearchOptions = {}) => {
-			const { append = true } = options;
-			const params = new URLSearchParams(append ? searchParams : '');
+	const setParams = (input: SearchParams, options: SearchOptions = {}) => {
+		const { append = true } = options;
+		const params = new URLSearchParams(append ? searchParams : '');
 
-			Object.entries(input).forEach(([key, value]) => {
-				if (!value) {
-					params.delete(key);
+		Object.entries(input).forEach(([key, value]) => {
+			if (!value) {
+				params.delete(key);
 
-					return;
-				}
+				return;
+			}
 
-				params.set(key, value);
-			});
+			params.set(key, value);
+		});
 
-			router.replace(`${pathname}?${params.toString()}`);
-		},
-		[pathname, router, searchParams]
-	);
+		router.replace(`${pathname}?${params.toString()}`);
+	};
 
 	return {
 		search,

@@ -3,7 +3,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationEllipsis } fro
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import { getItemType } from '@/utils/pagination';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo, useCallback, memo } from 'react';
+import { useMemo } from 'react';
 
 interface PaginationProps {
 	totalPages: number;
@@ -14,12 +14,9 @@ const BasePagination = ({ totalPages, page }: Readonly<PaginationProps>) => {
 	const totalItems = useMemo(() => Array.from({ length: totalPages }, (_, index) => index + 1), [totalPages]);
 	const { setParams } = useSearchFilters();
 
-	const handlePageChange = useCallback(
-		(newPage: number) => {
-			setParams({ page: newPage });
-		},
-		[setParams]
-	);
+	const handlePageChange = (newPage: number) => {
+		setParams({ page: newPage });
+	};
 
 	return (
 		<Pagination
@@ -86,4 +83,4 @@ const BasePagination = ({ totalPages, page }: Readonly<PaginationProps>) => {
 	);
 };
 
-export default memo(BasePagination);
+export default BasePagination;

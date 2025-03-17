@@ -35,5 +35,5 @@ export const useRandomMovie = () => {
 		}
 	}, [client, genre]);
 
-	return { randomMovie, getRandomMovie, setRandomMovie };
+	return { randomMovie, getRandomMovie };
 };

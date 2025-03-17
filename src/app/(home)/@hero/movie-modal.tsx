@@ -1,7 +1,7 @@
 'use client';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { useEffect, useCallback, memo } from 'react';
+import { useEffect } from 'react';
 import { useRandomMovie } from '@/hooks/useRandomMovie';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import MovieCard from '../@movies/movie-card';
@@ -19,9 +19,9 @@ const MovieModal = () => {
 		}
 	}, [isOpen, getRandomMovie]);
 
-	const handleCloseDialog = useCallback(() => {
+	const handleCloseDialog = () => {
 		setParams({ modal: '' });
-	}, [setParams]);
+	};
 
 	if (!movie?.id) {
 		return null;
@@ -53,4 +53,4 @@ const MovieModal = () => {
 	);
 };
 
-export default memo(MovieModal);
+export default MovieModal;
