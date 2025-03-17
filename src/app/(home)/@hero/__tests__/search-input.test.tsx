@@ -16,7 +16,6 @@ describe('SearchInput Component', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 
-		// Default mock implementations
 		(useSearchFilters as jest.Mock).mockReturnValue({
 			search: '',
 			setParams: mockSetParams,

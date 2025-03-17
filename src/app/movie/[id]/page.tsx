@@ -1,11 +1,11 @@
 import MovieDetailsPage from '@/app/movie/[id]/(movie-detail)';
 
 type MovieDetailPageProps = {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 };
 
-const MovieDetailPage = ({ params }: Readonly<MovieDetailPageProps>) => {
-	const { id } = params;
+const MovieDetailPage = async ({ params }: Readonly<MovieDetailPageProps>) => {
+	const { id } = await params;
 
 	return <MovieDetailsPage id={id} />;
 };
