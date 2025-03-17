@@ -22,7 +22,6 @@ describe('useSearchFilters Hook', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 
-		// Mock implementations
 		(useSearchParams as jest.Mock).mockReturnValue({
 			get: mockGet,
 			toString: () => 'search=test&genre=action&page=1',
