@@ -4,7 +4,6 @@ import { useMovies } from '@/hooks/useCustomQuery';
 import { useSearchParams } from 'next/navigation';
 import { movieFactory } from '@/utils/movies';
 
-// Mock the hooks
 jest.mock('@/hooks/useCustomQuery', () => ({
 	useMovies: jest.fn(),
 }));

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Error from '@/app/movie/[id]/error';
+import ErrorBoundary from '@/app/movie/[id]/error';
 import { useRouter } from 'next/navigation';
 
 jest.mock('next/navigation', () => ({
@@ -21,7 +21,7 @@ describe('Error Component', () => {
 
 	it('renders the error message', () => {
 		render(
-			<Error
+			<ErrorBoundary
 				error="Test error"
 				reset={mockReset}
 			/>
@@ -32,7 +32,7 @@ describe('Error Component', () => {
 
 	it('calls reset function when Try Again button is clicked', () => {
 		render(
-			<Error
+			<ErrorBoundary
 				error="Test error"
 				reset={mockReset}
 			/>
@@ -46,7 +46,7 @@ describe('Error Component', () => {
 
 	it('calls router.back when Go Back button is clicked', () => {
 		render(
-			<Error
+			<ErrorBoundary
 				error="Test error"
 				reset={mockReset}
 			/>

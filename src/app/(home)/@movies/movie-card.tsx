@@ -46,5 +46,4 @@ const MovieCard = ({ title, posterUrl, datePublished, ratingValue }: Readonly<Mo
 	);
 };
 
-// Memoize the component to prevent unnecessary re-renders
 export default memo(MovieCard);

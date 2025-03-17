@@ -9,7 +9,7 @@ interface ErrorProps {
 	reset: () => void;
 }
 
-const Error = ({ reset }: ErrorProps) => {
+const ErrorBoundary = ({ reset }: ErrorProps) => {
 	const router = useRouter();
 
 	return (
@@ -34,4 +34,4 @@ const Error = ({ reset }: ErrorProps) => {
 	);
 };
 
-export default Error;
+export default ErrorBoundary;
