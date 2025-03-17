@@ -1,0 +1,35 @@
+name: Sync Environment Variables
+
+on:
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  sync-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Set Environment Variables
+        run: |
+          # Example of how to set environment variables from GitHub Secrets
+          # Replace SECRET_NAME with your actual secret names
+          vercel env add API_KEY production ${{ secrets.API_KEY }} --token=${{ secrets.VERCEL_TOKEN }}
+          vercel env add DATABASE_URL production ${{ secrets.DATABASE_URL }} --token=${{ secrets.VERCEL_TOKEN }}
+
+          # You can also use a loop to set multiple environment variables
+          # for secret_name in API_KEY DATABASE_URL OTHER_SECRET; do
+          #   secret_value=$(eval echo "\${{ secrets.$secret_name }}")
+          #   if [ ! -z "$secret_value" ]; then
+          #     vercel env add $secret_name production "$secret_value" --token=${{ secrets.VERCEL_TOKEN }}
+          #   fi
+          # done
+
+      - name: Deploy to Vercel
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
