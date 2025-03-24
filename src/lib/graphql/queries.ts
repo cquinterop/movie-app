@@ -12,7 +12,6 @@ export const GET_MOVIES: TypedDocumentNode<MoviesData, MoviesVariables> = gql`
 			pagination {
 				...PaginationFragment
 			}
-			totalMovies @client
 		}
 	}
 

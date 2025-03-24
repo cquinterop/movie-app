@@ -24,6 +24,13 @@ export const cache = new InMemoryCache({
 				},
 			},
 		},
+		MovieConnection: {
+			fields: {
+				totalMovies: {
+					read: (existing) => existing ?? 0,
+				},
+			},
+		},
 	},
 });
 
