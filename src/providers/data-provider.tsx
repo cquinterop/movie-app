@@ -2,13 +2,13 @@
 
 import { type ReactNode, useMemo } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { QueryMoviesArgs } from '@/__generated__/types';
+import { MoviesVariables } from '@/types/movie';
 
 interface DataProviderProps {
 	children: ReactNode;
 }
 
-const getCacheKey = ({ pagination, where }: QueryMoviesArgs) => `genre:${where?.genre}-page:${pagination?.page}`;
+const getCacheKey = ({ pagination, where }: MoviesVariables) => `genre:${where?.genre}-page:${pagination?.page}`;
 
 export const cache = new InMemoryCache({
 	typePolicies: {
@@ -16,10 +16,10 @@ export const cache = new InMemoryCache({
 			fields: {
 				movies: {
 					keyArgs: false,
-					read: (existing, { variables }) => existing?.[getCacheKey(variables as QueryMoviesArgs)],
+					read: (existing, { variables }) => existing?.[getCacheKey(variables as MoviesVariables)],
 					merge: (existing, incoming, { variables }) => ({
 						...(existing || {}),
-						[getCacheKey(variables as QueryMoviesArgs)]: incoming,
+						[getCacheKey(variables as MoviesVariables)]: incoming,
 					}),
 				},
 			},
