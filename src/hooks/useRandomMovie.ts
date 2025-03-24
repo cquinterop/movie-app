@@ -1,19 +1,16 @@
 import { useCallback, useState } from 'react';
 import { GET_MOVIES } from '@/lib/graphql/queries';
-import { useMovies } from '@/hooks/useCustomQuery';
 import { movieFactory } from '@/utils/movies';
 import { MovieData } from '@/types/movie';
-import { useSearchParams } from 'next/navigation';
+import { cache } from '@/providers/data-provider';
+import { useSearchFilters } from '@/hooks/useSearchFilter';
 
 export const useRandomMovie = () => {
-	const { client } = useMovies();
 	const [randomMovie, setRandomMovie] = useState<MovieData['movie']>();
-	const searchParams = useSearchParams();
-
-	const genre = searchParams.get('genre') ?? '';
+	const { genre } = useSearchFilters();
 
 	const getRandomMovie = useCallback(() => {
-		const cacheData = client.readQuery({
+		const cacheData = cache.readQuery({
 			query: GET_MOVIES,
 			variables: {
 				pagination: {
@@ -33,7 +30,7 @@ export const useRandomMovie = () => {
 
 			setRandomMovie(movieFactory(movies[randomIndex]));
 		}
-	}, [client, genre]);
+	}, [genre]);
 
 	return { randomMovie, getRandomMovie };
 };

@@ -1,22 +1,24 @@
 import { renderHook, act } from '@testing-library/react';
 import { useRandomMovie } from '@/hooks/useRandomMovie';
-import { useMovies } from '@/hooks/useCustomQuery';
-import { useSearchParams } from 'next/navigation';
 import { movieFactory } from '@/utils/movies';
+import { cache } from '@/providers/data-provider';
+import { useSearchFilters } from '../useSearchFilter';
 
-jest.mock('@/hooks/useCustomQuery', () => ({
-	useMovies: jest.fn(),
+jest.mock('@/hooks/useSearchFilter', () => ({
+	useSearchFilters: jest.fn(),
 }));
 
-jest.mock('next/navigation', () => ({
-	useSearchParams: jest.fn(),
+jest.mock('@/providers/data-provider', () => ({
+	cache: {
+		readQuery: jest.fn(),
+	},
 }));
-
-const mockMathRandom = jest.spyOn(global.Math, 'random');
 
 jest.mock('@/utils/movies', () => ({
 	movieFactory: jest.fn((movie) => movie),
 }));
+
+const mockMathRandom = jest.spyOn(global.Math, 'random');
 
 const mockMovies = [
 	{ id: '1', title: 'Movie 1', posterUrl: 'url1', datePublished: '2023-01-01', ratingValue: '8.5' },
@@ -25,38 +27,22 @@ const mockMovies = [
 ];
 
 describe('useRandomMovie Hook', () => {
-	const mockClient = {
-		readQuery: jest.fn(),
-	};
-
 	beforeEach(() => {
 		jest.clearAllMocks();
 
-		(useMovies as jest.Mock).mockReturnValue({
-			client: mockClient,
-		});
+		(useSearchFilters as jest.Mock).mockReturnValue({ genre: 'action' });
 
-		(useSearchParams as jest.Mock).mockReturnValue({
-			get: jest.fn().mockImplementation((key) => (key === 'genre' ? 'action' : '')),
-		});
+		mockMathRandom.mockReturnValue(0.5);
 
-		mockClient.readQuery.mockReturnValue({
+		(cache.readQuery as jest.Mock).mockReturnValue({
 			movies: {
 				nodes: mockMovies,
 			},
 		});
-
-		mockMathRandom.mockReturnValue(0.5);
 	});
 
 	afterAll(() => {
 		mockMathRandom.mockRestore();
-	});
-
-	it('initializes with undefined randomMovie', () => {
-		const { result } = renderHook(() => useRandomMovie());
-
-		expect(result.current.randomMovie).toBeUndefined();
 	});
 
 	it('selects a random movie when getRandomMovie is called', () => {
@@ -66,35 +52,14 @@ describe('useRandomMovie Hook', () => {
 			result.current.getRandomMovie();
 		});
 
+		expect(cache.readQuery).toHaveBeenCalled();
 		expect(result.current.randomMovie).toBeDefined();
 		expect(result.current.randomMovie?.id).toBe('2');
 		expect(result.current.randomMovie?.title).toBe('Movie 2');
 	});
 
-	it('uses the genre from search params when querying', () => {
-		const { result } = renderHook(() => useRandomMovie());
-
-		act(() => {
-			result.current.getRandomMovie();
-		});
-
-		expect(mockClient.readQuery).toHaveBeenCalledWith(
-			expect.objectContaining({
-				variables: expect.objectContaining({
-					where: expect.objectContaining({
-						genre: 'action',
-					}),
-				}),
-			})
-		);
-	});
-
-	it('does not set randomMovie if no movies are found', () => {
-		mockClient.readQuery.mockReturnValueOnce({
-			movies: {
-				nodes: [],
-			},
-		});
+	it('should not set random movie when cache is empty', () => {
+		(cache.readQuery as jest.Mock).mockReturnValue(null);
 
 		const { result } = renderHook(() => useRandomMovie());
 

@@ -5,11 +5,9 @@ import MovieCard from '@/app/(home)/@movies/movie-card';
 import BasePagination from '@/app/(home)/@movies/base-pagination';
 import EmptyState from '@/components/ui/empty-state';
 import { useMovies } from '@/hooks/useCustomQuery';
-import { useSearchFilters } from '@/hooks/useSearchFilter';
 
 const MovieSection = () => {
-	const { search, genre, page } = useSearchFilters();
-	const { data: movies, pagination, totalMovies } = useMovies({ where: { search, genre }, pagination: { page: Number.parseInt(page) || 1, perPage: 24 } });
+	const { data: movies, pagination, totalMovies } = useMovies();
 
 	if (!movies.length) {
 		return <EmptyState />;
@@ -18,7 +16,7 @@ const MovieSection = () => {
 	return (
 		<section className="container mx-auto pb-12">
 			{!!totalMovies && <p className="m-8 text-lg font-semibold">Movie Count: {totalMovies}</p>}
-			<div className="flex flex-wrap justify-center gap-6">
+			<div className="flex flex-wrap justify-center gap-6 md:justify-start">
 				{movies.map((movie) => (
 					<Link
 						href={`/movie/${movie.id}`}

@@ -43,3 +43,6 @@ next-env.d.ts
 # Vercel
 .vercel
 .env*.local
+
+# Ignore GraphQL-generated files
+src/__generated__/

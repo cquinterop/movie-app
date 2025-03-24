@@ -2,12 +2,30 @@
 
 import { type ReactNode, useMemo } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { QueryMoviesArgs } from '@/__generated__/types';
 
 interface DataProviderProps {
 	children: ReactNode;
 }
 
-export const cache = new InMemoryCache();
+const getCacheKey = ({ pagination, where }: QueryMoviesArgs) => `genre:${where?.genre}-page:${pagination?.page}`;
+
+export const cache = new InMemoryCache({
+	typePolicies: {
+		Query: {
+			fields: {
+				movies: {
+					keyArgs: false,
+					read: (existing, { variables }) => existing?.[getCacheKey(variables as QueryMoviesArgs)],
+					merge: (existing, incoming, { variables }) => ({
+						...(existing || {}),
+						[getCacheKey(variables as QueryMoviesArgs)]: incoming,
+					}),
+				},
+			},
+		},
+	},
+});
 
 const createApolloClient = () => {
 	return new ApolloClient({
@@ -17,9 +35,8 @@ const createApolloClient = () => {
 			authorization: `Bearer ${process.env.NEXT_PUBLIC_MOVIES_API_TOKEN}`,
 		},
 		defaultOptions: {
-			watchQuery: {
-				fetchPolicy: 'network-only',
-				nextFetchPolicy: 'cache-only',
+			query: {
+				fetchPolicy: 'cache-first',
 			},
 		},
 	});

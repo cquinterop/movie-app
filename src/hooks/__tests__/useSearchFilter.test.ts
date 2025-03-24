@@ -8,10 +8,10 @@ jest.mock('next/navigation', () => ({
 	usePathname: jest.fn(),
 }));
 
-const params: Record<string, string> = {
+const params = {
 	search: 'test',
 	genre: 'action',
-	page: '1',
+	page: 1,
 	modal: 'random',
 };
 

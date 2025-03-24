@@ -1,8 +1,15 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useMovies, useMovie, useGenres } from '@/hooks/useCustomQuery';
 import { useSuspenseQuery } from '@apollo/client';
-import { GET_MOVIES, GET_MOVIE, GET_GENRES } from '@/lib/graphql/queries';
+import { GET_MOVIE, GET_GENRES } from '@/lib/graphql/queries';
 import { movieFactory } from '@/utils/movies';
+import { useSearchFilters } from '@/hooks/useSearchFilter';
+import { MOVIES_PER_PAGE } from '@/constants/movies';
+
+// Mock dependencies
+jest.mock('@/hooks/useSearchFilter', () => ({
+	useSearchFilters: jest.fn(),
+}));
 
 jest.mock('@/lib/graphql/queries', () => ({
 	GET_MOVIES: 'GET_MOVIES_QUERY',
@@ -16,37 +23,41 @@ jest.mock('@apollo/client', () => ({
 }));
 
 jest.mock('@/utils/movies', () => ({
-	movieFactory: jest.fn((movie) => movie),
+	movieFactory: jest.fn((movie) => ({ ...movie, factoryProcessed: true })),
 }));
 
-const mockMovies = [
-	{ id: '1', title: 'Movie 1', posterUrl: 'url1' },
-	{ id: '2', title: 'Movie 2', posterUrl: 'url2' },
-];
-
-const mockMovie = {
-	id: '1',
-	title: 'Movie 1',
-	posterUrl: 'url1',
-	summary: 'A great movie',
-	genres: [{ id: '1', title: 'Action' }],
-};
-
-const mockGenres = [
-	{ id: '1', title: 'Action' },
-	{ id: '2', title: 'Comedy' },
-];
-
-const mockClient = {
-	readQuery: jest.fn(),
-	writeQuery: jest.fn(),
-};
+jest.mock('@/constants/movies', () => ({
+	MOVIES_PER_PAGE: 24,
+}));
 
 describe('useCustomQuery Hooks', () => {
+	const mockMovies = [
+		{ id: '1', title: 'Movie 1', posterUrl: 'url1' },
+		{ id: '2', title: 'Movie 2', posterUrl: 'url2' },
+	];
+
+	const mockMovie = {
+		id: '1',
+		title: 'Movie 1',
+		posterUrl: 'url1',
+		summary: 'A great movie',
+		genres: [{ id: '1', title: 'Action' }],
+	};
+
+	const mockGenres = [
+		{ id: '1', title: 'Action' },
+		{ id: '2', title: 'Comedy' },
+	];
+
 	const mockFetchMore = jest.fn();
 
 	beforeEach(() => {
 		jest.clearAllMocks();
+		(useSearchFilters as jest.Mock).mockReturnValue({
+			search: '',
+			genre: '',
+			page: 1,
+		});
 	});
 
 	describe('useMovies Hook', () => {
@@ -64,22 +75,23 @@ describe('useCustomQuery Hooks', () => {
 					},
 				},
 				fetchMore: mockFetchMore,
-				client: mockClient,
 			});
 
 			const { result } = renderHook(() => useMovies());
 
-			expect(result.current.data).toEqual(mockMovies);
+			expect(result.current.data).toEqual(mockMovies.map((movie) => ({ ...movie, factoryProcessed: true })));
 			expect(result.current.pagination).toEqual({
 				page: 1,
 				perPage: 10,
 				totalPages: 5,
 			});
 			expect(result.current.totalMovies).toBe(50);
-			expect(result.current.client).toBe(mockClient);
 
-			expect(useSuspenseQuery).toHaveBeenCalledWith(GET_MOVIES, {
-				variables: {},
+			expect(useSuspenseQuery).toHaveBeenCalledWith('GET_MOVIES_QUERY', {
+				variables: {
+					where: { search: '', genre: '' },
+					pagination: { page: 1, perPage: MOVIES_PER_PAGE },
+				},
 			});
 
 			expect(movieFactory).toHaveBeenCalledTimes(2);
@@ -99,7 +111,6 @@ describe('useCustomQuery Hooks', () => {
 					},
 				},
 				fetchMore: mockFetchMore,
-				client: mockClient,
 			});
 
 			const { result } = renderHook(() => useMovies());
@@ -123,61 +134,56 @@ describe('useCustomQuery Hooks', () => {
 							perPage: 10,
 							totalPages: 5,
 						},
-						totalMovies: undefined,
 					},
 				},
 				fetchMore: mockFetchMore,
-				client: mockClient,
 			});
 
 			renderHook(() => useMovies());
 
 			await waitFor(() => {
-				expect(mockFetchMore).toHaveBeenCalledWith(
-					expect.objectContaining({
-						variables: expect.objectContaining({
-							pagination: {
-								page: 5,
-								perPage: 10,
-							},
-						}),
-					})
-				);
+				expect(mockFetchMore).toHaveBeenCalledWith({
+					variables: {
+						where: { search: '', genre: '' },
+						pagination: {
+							page: 5,
+							perPage: 10,
+						},
+					},
+					updateQuery: expect.any(Function),
+				});
 			});
 		});
 
-		it('passes custom variables to the query', async () => {
+		it('uses search filters as variables for the query', async () => {
+			(useSearchFilters as jest.Mock).mockReturnValue({
+				search: 'test',
+				genre: 'Action',
+				page: 2,
+			});
+
 			(useSuspenseQuery as jest.Mock).mockReturnValue({
 				data: {
 					movies: {
 						nodes: mockMovies,
 						pagination: {
-							page: 1,
-							perPage: 10,
+							page: 2,
+							perPage: MOVIES_PER_PAGE,
 							totalPages: 5,
 						},
 						totalMovies: 50,
 					},
 				},
 				fetchMore: mockFetchMore,
-				client: mockClient,
 			});
 
-			const variables = {
-				where: {
-					genre: 'Action',
-					search: 'test',
-				},
-				pagination: {
-					page: 2,
-					perPage: 20,
-				},
-			};
+			renderHook(() => useMovies());
 
-			renderHook(() => useMovies(variables));
-
-			expect(useSuspenseQuery).toHaveBeenCalledWith(GET_MOVIES, {
-				variables,
+			expect(useSuspenseQuery).toHaveBeenCalledWith('GET_MOVIES_QUERY', {
+				variables: {
+					where: { search: 'test', genre: 'Action' },
+					pagination: { page: 2, perPage: MOVIES_PER_PAGE },
+				},
 			});
 		});
 	});
@@ -191,10 +197,9 @@ describe('useCustomQuery Hooks', () => {
 			});
 
 			const variables = { movieId: '1' };
-
 			const { result } = renderHook(() => useMovie(variables));
 
-			expect(result.current.data).toEqual(mockMovie);
+			expect(result.current.data).toEqual({ ...mockMovie, factoryProcessed: true });
 			expect(useSuspenseQuery).toHaveBeenCalledWith(GET_MOVIE, {
 				variables,
 			});
@@ -210,12 +215,13 @@ describe('useCustomQuery Hooks', () => {
 
 			const variables = { movieId: 'non-existent' };
 			const { result } = renderHook(() => useMovie(variables));
+
 			expect(result.current.data).toBeNull();
 		});
 	});
 
 	describe('useGenres Hook', () => {
-		it('returns genre data', async () => {
+		it('returns genre data', () => {
 			(useSuspenseQuery as jest.Mock).mockReturnValue({
 				data: {
 					genres: {
@@ -230,7 +236,7 @@ describe('useCustomQuery Hooks', () => {
 			expect(useSuspenseQuery).toHaveBeenCalledWith(GET_GENRES);
 		});
 
-		it('returns empty array when genre data is not available', async () => {
+		it('returns empty array when genre data is not available', () => {
 			(useSuspenseQuery as jest.Mock).mockReturnValue({
 				data: {
 					genres: {
@@ -240,6 +246,17 @@ describe('useCustomQuery Hooks', () => {
 			});
 
 			const { result } = renderHook(() => useGenres());
+
+			expect(result.current.data).toEqual([]);
+		});
+
+		it('handles undefined data gracefully', () => {
+			(useSuspenseQuery as jest.Mock).mockReturnValue({
+				data: undefined,
+			});
+
+			const { result } = renderHook(() => useGenres());
+
 			expect(result.current.data).toEqual([]);
 		});
 	});
