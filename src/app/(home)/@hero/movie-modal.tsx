@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { useEffect } from 'react';
 import { useRandomMovie } from '@/hooks/useRandomMovie';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
-import MovieCard from '../@movies/movie-card';
+import MovieCard from '@/app/(home)/@movies/movie-card';
 import Link from 'next/link';
 
 const MovieModal = () => {

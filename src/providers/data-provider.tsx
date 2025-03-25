@@ -8,7 +8,7 @@ interface DataProviderProps {
 	children: ReactNode;
 }
 
-const getCacheKey = ({ pagination, where }: MoviesVariables) => `genre:${where?.genre}-page:${pagination?.page}`;
+const getCacheKey = ({ pagination, where }: MoviesVariables) => `genre:${where?.genre || 'All'}-page:${pagination?.page}-search:${where?.search}`;
 
 export const cache = new InMemoryCache({
 	typePolicies: {

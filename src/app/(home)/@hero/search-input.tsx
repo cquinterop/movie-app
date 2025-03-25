@@ -4,23 +4,33 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Search } from 'lucide-react';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import debounce from 'debounce';
 
 const SearchInput = () => {
 	const { search: initialSearch, setParams } = useSearchFilters();
+	const formRef = useRef<HTMLFormElement>(null);
+
+	useEffect(() => {
+		if (!initialSearch) {
+			formRef.current?.reset();
+		}
+	}, [initialSearch, formRef]);
 
 	const handleMovieSearch = useMemo(
 		() =>
 			debounce((event: { target: HTMLInputElement }) => {
 				const search = event.target.value;
-				setParams({ search, page: 1 });
+				setParams({ search }, { append: false });
 			}, 1500),
 		[setParams]
 	);
 
 	return (
-		<div className="mt-10 flex justify-center px-5">
+		<form
+			className="mt-10 flex justify-center px-5"
+			ref={formRef}
+		>
 			<Label
 				className="sr-only"
 				htmlFor="movie"
@@ -46,7 +56,7 @@ const SearchInput = () => {
 					onChange={handleMovieSearch}
 				/>
 			</div>
-		</div>
+		</form>
 	);
 };
 

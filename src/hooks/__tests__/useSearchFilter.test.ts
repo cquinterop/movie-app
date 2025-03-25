@@ -16,7 +16,7 @@ const params = {
 };
 
 describe('useSearchFilters Hook', () => {
-	const mockReplace = jest.fn();
+	const mockPush = jest.fn();
 	const mockGet = jest.fn();
 
 	beforeEach(() => {
@@ -28,7 +28,7 @@ describe('useSearchFilters Hook', () => {
 		});
 
 		(useRouter as jest.Mock).mockReturnValue({
-			replace: mockReplace,
+			push: mockPush,
 		});
 
 		(usePathname as jest.Mock).mockReturnValue('/');
@@ -47,14 +47,14 @@ describe('useSearchFilters Hook', () => {
 		expect(result.current.modal).toBe(params.modal);
 	});
 
-	it('calls router.replace when setParams is called', () => {
+	it('calls router.push when setParams is called', () => {
 		const { result } = renderHook(() => useSearchFilters());
 
 		act(() => {
 			result.current.setParams({ search: 'new search', page: 1 });
 		});
 
-		expect(mockReplace).toHaveBeenCalled();
+		expect(mockPush).toHaveBeenCalled();
 	});
 
 	it('removes parameters with empty values', () => {
@@ -64,7 +64,7 @@ describe('useSearchFilters Hook', () => {
 			result.current.setParams({ search: '', genre: '' });
 		});
 
-		expect(mockReplace).toHaveBeenCalled();
+		expect(mockPush).toHaveBeenCalled();
 	});
 
 	it('replaces all parameters when append is false', () => {
@@ -74,9 +74,9 @@ describe('useSearchFilters Hook', () => {
 			result.current.setParams({ search: 'new search' }, { append: false });
 		});
 
-		expect(mockReplace).toHaveBeenCalled();
+		expect(mockPush).toHaveBeenCalled();
 
-		const url = mockReplace.mock.calls[0][0];
+		const url = mockPush.mock.calls[0][0];
 		expect(url).toContain('search=new+search');
 	});
 });

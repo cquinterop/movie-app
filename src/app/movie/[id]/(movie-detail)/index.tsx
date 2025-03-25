@@ -1,7 +1,6 @@
 'use client';
 
 import { useMovie } from '@/hooks/useCustomQuery';
-import { MovieVariables } from '@/types/movie';
 import EmptyState from '@/components/ui/empty-state';
 import CastSection from '@/app/movie/[id]/(movie-detail)/cast-section';
 import MetaSection from '@/app/movie/[id]/(movie-detail)/meta-section';
@@ -9,7 +8,7 @@ import GenresSection from '@/app/movie/[id]/(movie-detail)/genres-section';
 import PosterImage from '@/components/ui/poster-image';
 
 type MovieDetailProps = {
-	id: MovieVariables['movieId'];
+	id: string;
 };
 
 const MovieDetail = ({ id }: Readonly<MovieDetailProps>) => {

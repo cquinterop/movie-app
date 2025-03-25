@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useMovies, useMovie, useGenres } from '@/hooks/useCustomQuery';
 import { useSuspenseQuery } from '@apollo/client';
-import { GET_MOVIE, GET_GENRES } from '@/lib/graphql/queries';
+import { GET_GENRES } from '@/lib/graphql/queries';
 import { movieFactory } from '@/utils/movies';
 import { useSearchFilters } from '@/hooks/useSearchFilter';
 import { MOVIES_PER_PAGE } from '@/constants/movies';
@@ -35,14 +35,6 @@ describe('useCustomQuery Hooks', () => {
 		{ id: '1', title: 'Movie 1', posterUrl: 'url1' },
 		{ id: '2', title: 'Movie 2', posterUrl: 'url2' },
 	];
-
-	const mockMovie = {
-		id: '1',
-		title: 'Movie 1',
-		posterUrl: 'url1',
-		summary: 'A great movie',
-		genres: [{ id: '1', title: 'Action' }],
-	};
 
 	const mockGenres = [
 		{ id: '1', title: 'Action' },
@@ -189,23 +181,6 @@ describe('useCustomQuery Hooks', () => {
 	});
 
 	describe('useMovie Hook', () => {
-		it('returns formatted movie data for a specific movie', async () => {
-			(useSuspenseQuery as jest.Mock).mockReturnValue({
-				data: {
-					movie: mockMovie,
-				},
-			});
-
-			const variables = { movieId: '1' };
-			const { result } = renderHook(() => useMovie(variables));
-
-			expect(result.current.data).toEqual({ ...mockMovie, factoryProcessed: true });
-			expect(useSuspenseQuery).toHaveBeenCalledWith(GET_MOVIE, {
-				variables,
-			});
-			expect(movieFactory).toHaveBeenCalledWith(mockMovie);
-		});
-
 		it('returns null when movie data is not available', async () => {
 			(useSuspenseQuery as jest.Mock).mockReturnValue({
 				data: {

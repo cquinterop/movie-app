@@ -1,7 +1,7 @@
 'use client';
 
 import { useSuspenseQuery } from '@apollo/client';
-import { MovieData, MovieVariables } from '@/types/movie';
+import { MovieData, MoviesData, MovieVariables } from '@/types/movie';
 import { GenresData } from '@/types/genre';
 import { GET_MOVIES, GET_MOVIE, GET_GENRES } from '@/lib/graphql/queries';
 import { movieFactory } from '@/utils/movies';
@@ -18,7 +18,7 @@ export const useMovies = (query = GET_MOVIES) => {
 		}),
 		[search, genre, page]
 	);
-	const { data, fetchMore } = useSuspenseQuery(query, { variables });
+	const { data, fetchMore } = useSuspenseQuery<MoviesData>(query, { variables });
 
 	useEffect(() => {
 		if (data?.movies?.totalMovies) {
@@ -38,10 +38,19 @@ export const useMovies = (query = GET_MOVIES) => {
 					return previousData;
 				}
 
+				if (fetchMoreResult.movies.pagination.totalPages === 1) {
+					return {
+						movies: {
+							...previousData.movies,
+							totalMovies: fetchMoreResult.movies.nodes.length,
+						},
+					};
+				}
+
 				return {
 					movies: {
 						...previousData.movies,
-						totalMovies: Number(previousData.movies.pagination.perPage) * (Number(previousData.movies.pagination.totalPages) - 1) + fetchMoreResult.movies.nodes.length,
+						totalMovies: Number(fetchMoreResult.movies.pagination.perPage) * (Number(fetchMoreResult.movies.pagination.totalPages) - 1) + fetchMoreResult.movies.nodes.length,
 					},
 				};
 			},
@@ -51,7 +60,7 @@ export const useMovies = (query = GET_MOVIES) => {
 	return {
 		data: data?.movies?.nodes.map(movieFactory) ?? [],
 		pagination: data?.movies?.pagination ?? [],
-		totalMovies: data?.movies?.totalMovies ?? 1,
+		totalMovies: data?.movies?.totalMovies ?? 0,
 	};
 };
 
@@ -61,7 +70,7 @@ export const useMovie = (variables: MovieVariables) => {
 	});
 
 	return {
-		data: data?.movie ? movieFactory(data.movie) : null,
+		data: data?.movie,
 	};
 };
 
